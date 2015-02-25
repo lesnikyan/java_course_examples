@@ -6,12 +6,15 @@
 
 package serialize;
 
+import java.io.Externalizable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInput;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
 /**
@@ -34,6 +37,7 @@ public class BinSerialize {
 	public void serialize() throws FileNotFoundException, IOException{
 		MyObject mob = new MyObject();
 		mob.name = "ABCDEF";
+		p("MyObject: \n" + mob);
 		// serialize
 		FileOutputStream foStr = new FileOutputStream(file);
 		try (ObjectOutputStream ooStrm = new ObjectOutputStream(foStr)) {
@@ -47,7 +51,7 @@ public class BinSerialize {
 		FileInputStream fiStr = new FileInputStream(file);
 		try (ObjectInputStream oiStr = new ObjectInputStream(fiStr)) {
 			MyObject unMob = (MyObject) oiStr.readObject();
-			p("MyObject.name = " + unMob.name);
+			p("MyObject: \n" + unMob);
 		}
 		p("\n\n");
 	}
@@ -66,15 +70,51 @@ class BaseObject implements java.io.Serializable {
 
 class MyObject extends BaseObject{
 	
-	int myValue = 123;
+	private int myValue = 123;
+	
+	protected ExtObject ext = new ExtObject("External Entity!");
 	
 	private void writeObject(ObjectOutputStream out) throws IOException {
 		out.defaultWriteObject();
 		out.writeInt(myValue);
+		out.writeObject(ext);
 	}
 	
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
 		in.defaultReadObject();
 		myValue = in.readInt();
+		ext = (ExtObject) in.readObject();
 	}
+	
+	public String toString(){
+		return String.format("name:%s; value: %d; ext.name: %s  ", name, myValue, ext.getName());
+	}
+}
+
+class ExtObject implements Externalizable {
+	
+	private String name = null;
+	
+	public ExtObject(){
+		
+	}
+	
+	public ExtObject(String name){
+		this.name = name;
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeObject(name);
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		name = (String) in.readObject();
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
 }

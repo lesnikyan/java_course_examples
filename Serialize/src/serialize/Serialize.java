@@ -8,6 +8,7 @@ package serialize;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,6 +26,7 @@ public class Serialize {
 		bin();
 		xml();
 		json();
+		urlDemo();
 	}
 	
 	public static void bin(){
@@ -44,6 +46,16 @@ public class Serialize {
 	public static void json(){
 		JsonSerialize jsonSerializer = new JsonSerialize();
 		jsonSerializer.test();
+	}
+	
+	private static void urlDemo(){
+		try {
+			JavaUrl.demo();
+		} catch (MalformedURLException ex) {
+			Logger.getLogger(Serialize.class.getName()).log(Level.SEVERE, null, ex);
+		} catch (IOException ex) {
+			Logger.getLogger(Serialize.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 	
 }
