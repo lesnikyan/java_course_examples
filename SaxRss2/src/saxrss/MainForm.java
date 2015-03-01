@@ -27,8 +27,8 @@ public class MainForm extends javax.swing.JFrame {
 	public MainForm() {
 		initComponents();
 		// files from http://elementy.ru/rss/
-		String xmlFile = "C:\\Files\\JavaStepData\\cosmos.xml";
-		String xmlFile2 = "C:\\Files\\JavaStepData\\biology.xml";
+		String xmlFile = ".\\data\\cosmos.xml";
+		String xmlFile2 = ".\\data\\biology.xml";
 		RssViewer viewer = new RssViewer(rssTextPane);
 		try {
 			// Use SAX parser
