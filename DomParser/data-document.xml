@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+	<items>
+		<item id="1" >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, ab!</item>
+		<item id="2" >Unde atque at eum suscipit magni adipisci veniam obcaecati officiis!</item>
+		<item id="3" >Quidem, dolor sapiente aperiam beatae sit necessitatibus id enim ducimus.</item>
+	</items>
+	<units>
+		<unit name="unit01"></unit>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Maxime, ipsa.
+		<unit name="unit02"></unit>Facilis, officia magnam maxime quos quibusdam temporibus optio ex non.
+	</units>
+</root>
