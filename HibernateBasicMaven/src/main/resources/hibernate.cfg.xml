@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+ <!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="connection.url">jdbc:mysql://localhost:3306/test_jdbc</property>   
+    <property name="connection.username">javadev</property>
+    <property name="connection.password">1</property>
+    <property name="connection.pool_size">10</property>
+    <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+    <!--<property name="dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>-->
+    <!--<property name="dialect">org.hibernate.dialect.MySQLMyISAMDialect</property>-->
+    <!--http://www.javabeat.net/list-of-hibernate-sql-dialects/-->
+    <property name="show_sql">true</property>
+    <property name="hbm2ddl.auto">update</property>
+    <property name="hibernate.connection.autocommit">false</property>
+    <property name="current_session_context_class">thread</property>
+
+    <!--DB Mapping for tables:-->
+    <mapping class="structure.User" />
+    <mapping class="structure.Adress" />
+    <mapping class="structure.Action" />
+    
+  </session-factory>
+</hibernate-configuration>
