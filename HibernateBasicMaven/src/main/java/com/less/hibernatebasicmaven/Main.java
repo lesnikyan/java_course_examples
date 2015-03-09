@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import structure.Adress;
 import structure.User;
 import util.HibernateUtil;
 
@@ -35,8 +36,9 @@ import util.HibernateUtil;
 public class Main {
 	
 	public static void main(String[] args){
-		testSQL();
+	//	testSQL();
 		testDAO();
+	//	testHQL();
 	}
 	
 	private static void testSQL(){
@@ -84,6 +86,60 @@ public class Main {
 		}
 		p("end of SQL");
 	}
+	
+	private static void testHQL(){
+			/*
+		http://www.techferry.com/articles/hibernate-jpa-annotations.html
+		http://internetka.in.ua/hibernate-one-to-one/
+		*/
+		
+		p("testRelations and HQL:");
+		
+		Session session = null;
+		try{
+			session = HibernateUtil.getSessionFactory().openSession();
+			List<User> users;
+			// SQL
+//			Query userQ = session.createSQLQuery("SELECT users.id, users.adress_id, users.name, users.age, users.gender, users.rating, "
+//					+ "adress.street, adress.apartment, adress.building \n" +
+//				"FROM users\n" +
+//				"JOIN adress ON adress.id = users.adress_id\n" +
+//				"WHERE adress_id IS NOT NULL \n" +
+//				"LIMIT 0 , 1")
+//					.addEntity(User.class);
+//			users = userQ.list();
+			
+			// Criteria
+//			users = session.createCriteria(User.class)
+//					.add(Restrictions.isNotNull("adress"))
+//					.setMaxResults(20)
+//					.list();
+			
+			// HQL
+			Query userQ = session.createQuery("select new User(u.name, u.gender, u.age, u.adress) "
+					+ "from User as u join u.adress where u.adress is not null ");
+			users = (List<User>) userQ.list();
+			
+
+			
+			p("users count = " + users.size());
+			if(users.size() > 0){
+				User user = (User) users.get(0);
+				Adress addr = user.getAdress();
+				p("-- User Info");
+				p(String.format("User: %s [%d], Address: %s, %d.", 
+						user.getName(), user.getId(), 
+						addr.getStreet(), addr.getBuilding()));
+			}
+
+		}catch(HibernateException ex){
+			System.err.println(ex);
+		} finally {
+			if(session != null)
+				session.close();
+			HibernateUtil.getSessionFactory().close();
+		}
+	}
 
 	private static void testDAO(){
 		try {
@@ -103,8 +159,10 @@ public class Main {
 			// get all users
 			List<User> users = DAOFactory.getInstance().getUserDAO().getAllUsers();
 			
-			int from = users.size() > 10 ? users.size() - 10 : 0;
-			List<User> last = users.subList(from, users.size() - 1);
+			int from = users.size() > 10 ? users.size() - 11 : 0;
+			int to = users.size() > 0 ? users.size() -1 : 0;
+			p(String.format("testDAO.sublist keys: %d : %d", from, to));
+			List<User> last = users.subList(from, to);
 			printUsers(new ArrayList<User>(last));
 			
 			System.out.println("listByLikeNameAndMinRating");
