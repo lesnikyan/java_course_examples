@@ -36,9 +36,11 @@ import util.HibernateUtil;
 public class Main {
 	
 	public static void main(String[] args){
-	//	testSQL();
+		testSQL();
 		testDAO();
-	//	testHQL();
+		testHQL();
+		
+		HibernateUtil.getSessionFactory().close();
 	}
 	
 	private static void testSQL(){
@@ -82,7 +84,6 @@ public class Main {
 		} finally {
 			if(session != null)
 				session.close();
-			HibernateUtil.getSessionFactory().close();
 		}
 		p("end of SQL");
 	}
@@ -137,7 +138,6 @@ public class Main {
 		} finally {
 			if(session != null)
 				session.close();
-			HibernateUtil.getSessionFactory().close();
 		}
 	}
 
@@ -168,8 +168,6 @@ public class Main {
 			System.out.println("listByLikeNameAndMinRating");
 			users = DAOFactory.getInstance().getUserDAO().listByLikeNameAndMinRating("Vasya%", 2.0);
 			printUsers(new ArrayList<User>(users));
-			
-			HibernateUtil.getSessionFactory().close();
 			
 		} catch (SQLException ex) {
 			System.out.println("Main.main exception:");
