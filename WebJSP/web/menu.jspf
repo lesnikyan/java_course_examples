@@ -1,0 +1,47 @@
+<%@ page pageEncoding="UTF-8" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%@page import="java.util.List"%>
+<%@page import="java.util.ArrayList"%>
+
+<%!
+class MenuItem {
+    String text;
+    String link;
+    
+    MenuItem(String text, String link){
+        this.text = text;
+        this.link = link;
+    }
+    
+    String getText(){
+        return text;
+    }
+    
+    String getLink(){
+        return link;
+    }
+}
+%>
+
+<%! int x = 0;%>
+<% x++; %>
+<div><%= x %></div>
+
+<%! List<MenuItem> items; %>
+<% items = new ArrayList<>();  %>
+<%
+for(int i=1; i <=5; ++i){
+	items.add(new MenuItem("Page " + i, "./page/" + i));
+}
+%>
+
+<div>
+    <% for(MenuItem item: items){ %>
+    <a href="<%= item.getLink()%>"><%= item.getText() %></a>
+    <% }; %>
+</div>
+
+<c:forEach var="i" varStatus="loop" begin="6" end="10" step="1">
+	<a href="./page/${i}">Page <c:out value="${loop.index}"/></a>
+</c:forEach>
