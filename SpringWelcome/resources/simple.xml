@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans 
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd" >
+    
+    <bean id="simpleBean" class="lesson.simple.SimpleBean" >
+        <property name="str" value="Hello, wize Spring!" />
+    </bean>
+	
+	<!-- Collections -->
+	<bean name="collectionInProperties" class="lesson.simple.ObjWithList">
+		<property name="units">
+			<list>
+				<value>Hello, Unit!</value>
+				<value>Hello, Bean!</value>
+				<value>Hello, Spring!</value>
+			</list>
+		</property>
+		<property name="options">
+			<map>
+				<entry key="message" value="Hey, hey, Message Key!" />
+				<entry key="first-user">
+					<bean class="lesson.simple.SimpleUser">
+						<constructor-arg value="Vasya Stupkin" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<!-- Factory bean -->
+	<bean id="sFactory" class="lesson.simple.ServiceFactory" />
+	
+	<bean id="webService" factory-bean="sFactory" factory-method="getWeb" class="lesson.simple.SimpleWebService" />
+	
+	<bean id="restService" factory-bean="sFactory" factory-method="getRest" />
+	
+	<!-- Alias of bean -->
+	<alias name="webService" alias="mainService" />
+
+</beans>
