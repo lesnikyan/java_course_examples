@@ -1,0 +1,128 @@
+
+<project name="ant.tutorial" default="compile" >
+  <!-- Подключение файла свойств -->
+  <property file="build.properties"/>           
+
+  <!-- Создание каталогов для скомпилированных файлов -->
+  <target name="make.build.dirs">
+    <mkdir dir="${build.dir}"/>
+    <mkdir dir="${build.dir}/class"/>
+  </target>
+
+  <!-- Компиляция -->
+  <target name="compile" description="compile java" depends="make.build.dirs">
+  
+    <!-- Подготовка CLASSPATH для проведения компиляции -->
+    <path id="classpath">
+      <!-- Включить в CLASSPATH все jar-файлы из каталогов
+      ${lib.dir}/commons-math и ${lib.dir}/log4j, исключив
+      те, которые содержат документацию и исходники -->
+      <fileset dir="${lib.dir}" 
+               includes="commons-math/*.jar, log4j/*.jar" 
+               excludes="**/*javadoc*.jar,**/*sources*.jar"
+      />
+    </path>
+  
+    <!-- Сохранение текстового представления CLASSPATH в свойство -->
+    <pathconvert property="compile.classpath" refid="classpath"/> 
+    <!-- Вывод значения CLASSPATH на экран -->
+    <echo>CLASSPATH: ${compile.classpath}</echo>
+
+    <!-- Запуск компилятора с указанием CLASSPATH и каталога, 
+    содержащего файлы исходного кода Java -->
+    <javac destdir="${build.dir}/class">
+      <src path="${project.src.dir}"/>
+      <classpath refid="classpath"/>
+    </javac>
+  </target>
+
+  <!-- Создание каталогов для дистрибутива -->
+  <target name="make.dist.dirs" description="Make dirs for distribution">
+    <mkdir dir="${dist.dir}/${dist.name}"/>
+    <mkdir dir="${dist.dir}/${dist.name}/${dist.lib.dir}"/>
+  </target>
+  
+  <!-- Копирование всех jar'ов, описанных в CLASSPATH в каталог библиотек 
+  дистрибутива, т.к. они необходимы для выполнения программы -->
+  <target name="dist.lib.copy" depends="make.dist.dirs">
+    <copy todir="${dist.dir}/${dist.name}/${dist.lib.dir}" flatten="true">
+      <path refid="classpath"/>
+    </copy>
+  </target>
+  
+  <!-- Создание выполняемого java-архива -->
+  <target name="make.jar" description="Make jar file" depends="compile,dist.lib.copy">
+          
+    <!-- Конвертирование CLASSPATH, созданного для компиляции 
+    в CLASSPATH для выполнения java-архива и сохранение в свойство. 
+    В качестве сепаратора библиотек устанавливается пробел, т.к. 
+    именно он необходим в манифесте -->  
+    <pathconvert property="dist.classpath" pathsep=" " refid="classpath">
+      <mapper>
+        <chainedmapper>
+          
+          <!-- Удаление информации о пути к jar-файлам: 
+          остается только имя файла -->
+          <flattenmapper />
+          
+          <!-- Добавление перед именем файла имени каталога с 
+          библиотеками для дистрибутива -->
+          <globmapper from="*" to="${dist.lib.dir}/*" />
+        
+        </chainedmapper>
+      </mapper>
+    </pathconvert>        
+    
+    <!-- Вывод значения CLASSPATH для jar'а на экран -->
+    <echo>Class-Path: ${dist.classpath}</echo>     
+    
+    <!-- Создание jar -->
+    <jar destfile="${dist.dir}/${dist.name}/${build.jar.name}">                                  
+      <!-- Создание файла MANIFEST.MF -->
+      <manifest>
+        <attribute name="Built-By" value="eqlbin"/>
+        <attribute name="Main-Class" value="${build.jar.mainclass}"/>
+        <attribute name="Class-Path" value="${dist.classpath}"/>
+      </manifest>
+        
+      <!-- Скомпилированные файлы -->
+      <fileset dir="${build.dir}/class">
+        <include name="**/*.class"/>
+      </fileset>       
+    </jar>      
+  </target>
+  
+  <!-- Создание документации javadoc-->
+  <target name="javadoc">        
+    <javadoc sourcepath="${project.src.dir}"
+             defaultexcludes="yes"
+             destdir="${dist.dir}/${dist.name}/api"
+             author="true"
+             version="true"
+             use="true"
+             windowtitle="My Program API"
+             charset="UTF-8">
+           
+      <doctitle><![CDATA[<h1>
+
+My Program API</h1>]]></doctitle>
+      <bottom><![CDATA[<i>Copyright &#169; 2011 eqlbin. All Rights Reserved.</i>]]></bottom>
+    </javadoc> 
+  </target>  
+  
+  <!-- Создание дистрибутива для распространения -->
+  <target name="dist" description="Creating a distribution" depends="make.jar, dist.lib.copy, javadoc">
+    <!-- Копирование файла с полезной информацией в каталог с программой -->
+    <copy file="${project.dir}/readme.txt" todir="${dist.dir}/${dist.name}"/>
+    <!-- Удаление предыдущего архива дистрибутива, если он есть -->
+    <delete file="${dist.dir}/${dist.name}-v1.0.zip"/>
+    <!-- Создание zip-архива с исполняемым jar-файлом программы и каталогом с библиотеками -->
+    <zip destfile="${dist.dir}/${dist.name}-v1.0.zip" basedir="${dist.dir}"/>
+  </target>
+
+  <!-- Удаление результатов предыдущих сборок -->
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+    <delete dir="${dist.dir}"/>
+  </target>
+</project>

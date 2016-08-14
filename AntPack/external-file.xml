@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="external" default="test_external_echo">
+	<target name = "test_external_echo">
+		<echo>Ant: Test of external file</echo>
+	</target>
+	<property name="external.string" value="Run, Forest, run!" />
+</project>
