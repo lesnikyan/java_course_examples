@@ -30,6 +30,10 @@ public class XslTransformation {
 
     /**
      * @param args the command line arguments
+     * @throws javax.xml.parsers.ParserConfigurationException
+     * @throws javax.xml.transform.TransformerConfigurationException
+     * @throws java.io.IOException
+     * @throws org.xml.sax.SAXException
      */
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, 
             TransformerConfigurationException, TransformerException {
