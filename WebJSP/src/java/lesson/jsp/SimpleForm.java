@@ -59,6 +59,7 @@ public class SimpleForm extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		//processRequest(request, response);
+                request.setAttribute("helloMessage", "Hello! This is simple form page! :)");
 		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/simpleForm.jsp");
 		dispatcher.forward(request, response);
 	}
