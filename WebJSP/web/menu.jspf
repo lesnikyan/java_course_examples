@@ -4,6 +4,17 @@
 <%@page import="java.util.List"%>
 <%@page import="java.util.ArrayList"%>
 
+<style>
+    a.menu2 {
+        text-decoration: none;
+        color: #080;
+        background-color: #dfd;
+    }
+    a.menu2:hover {
+        background-color: #afa;
+    }
+</style>
+
 <%!
 class MenuItem {
     String text;
@@ -42,6 +53,8 @@ for(int i=1; i <=5; ++i){
     <% }; %>
 </div>
 
+<div>
 <c:forEach var="i" varStatus="loop" begin="6" end="10" step="1">
-	<a href="./page/${i}">Page <c:out value="${loop.index}"/></a>
+    <a class="menu2" href="./page/${i}">[Page <c:out value="${loop.index}"/>]</a>
 </c:forEach>
+</div>

@@ -7,10 +7,17 @@
         <title>Main Page</title>
     </head>
     <body>
+        
         <%-- Example of JSP --%>
         <!-- Тут был Вася... -->
+        
         <%@include file="menu.jspf" %>
-        <h1>Hello World!</h1>
+        
+        <h1>Main page.</h1>
+        
+        <jsp:useBean class="lesson.jsp.DemoBean" id="demo" />
+        <div>[ <jsp:getProperty name="demo" property="value" /> ]</div>
+        
         <%-- Exception example --%>
         <%-- int exVal = Integer.parseInt("qwerty"); --%>
     </body>
