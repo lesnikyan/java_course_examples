@@ -5,6 +5,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Main Page</title>
+        <link rel="stylesheet" href="/WebJSP/media/css/main.css" />
+        <script src="/WebJSP/media/js/jquery-3.2.1.js"></script>
+        <script src="/WebJSP/media/js/main.js"></script>
     </head>
     <body>
         
