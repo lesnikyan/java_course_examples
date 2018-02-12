@@ -18,12 +18,11 @@ public class UserController {
 	
 	@RequestMapping(value="/create", method = RequestMethod.GET)
 	public ModelAndView createForm(ModelMap model){
-		
-		return new ModelAndView("user/form", "command", new User());
+		return new ModelAndView("user/form", "user-form", new User());
 	}
 	
 	@RequestMapping(value="/create", method = RequestMethod.POST)
-	public String createHandler(@ModelAttribute("SpringWeb") User user, ModelMap model){
+	public String createHandler(@ModelAttribute("user-form") User user, ModelMap model){
 		model.addAttribute("name", user.getName());
 		model.addAttribute("pass", user.getPass());
 		model.addAttribute("email", user.getEmail());
@@ -31,6 +30,7 @@ public class UserController {
 		return "user/info";
 		// return "redirect:/user/";
 	}
+	
 	
 	@RequestMapping(value={"", "/info"}, method = RequestMethod.GET)
 	public String info(ModelMap model){

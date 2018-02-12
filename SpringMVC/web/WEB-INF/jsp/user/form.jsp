@@ -9,12 +9,12 @@
     </head>
     <body>
         <h1>form</h1>
-        <sf:form method="POST" action="/SpringMVC/user/create">
+        <sf:form method="POST" action="/SpringMVC/user/create" modelAttribute="user-form">
             <div><sf:input path="name" /> <sf:label path="name">Login</sf:label> </div>
             <div><sf:input path="pass" /> <sf:label path="pass">Password</sf:label></div>
             <div><sf:input path="email" /> <sf:label path="email">Email</sf:label></div>
             <div><sf:input path="alias" /> <sf:label path="alias">Public name or Psevdonym</sf:label></div>
-            <div><input type="submit" name="Create" /></div>
+            <div><input type="submit" value="Create" /></div>
         </sf:form>
     </body>
 </html>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+Useful links.
+
+http://www.tutorialspoint.com/ant/index.htm
+https://ant.apache.org/manual/
+
+
+
+-->
+
+<project name="ant_test" basedir="." default="all">
+	
+	<description>Test of ant tool</description>
+	
+	<import file="external-file.xml" />
+	
+	<property file="build.properties" />
+
+	<property name="src.path" value="src" />
+	<property name="build.path" value="${basedir}/build" />
+	<property name="dest.path" value="${build.path}/classes" />
+	<property name="jar.file" value="${build.path}/distr/mypack.jar" />
+
+	<target name="all" depends="test_prepare,hello,make_jar,run_after_compile">
+		<echo>Ant: target[all]: Done!</echo>
+	</target>
+	
+	<target name="hello">
+		<echo>Hello from ANT!</echo>
+	</target>
+	
+	<target name="make_dirs">
+		<mkdir dir="${build.path}" />
+		<mkdir dir="${dest.path}" />
+		<mkdir dir="${build.path}/distr" />
+	</target>
+	
+	<target name="compile">
+		<javac destdir="${dest.path}" includeantruntime="false">
+			<src path="${src.path}" />
+		</javac>
+	</target>
+	
+	<target name="make_jar" description="making jar file" depends="test_external_echo,test_external_param,make_dirs,compile">
+		<jar destfile="${jar.file}">
+			<fileset dir="${dest.path}">
+				<include name="**/*.class" /> <!-- любые файлы .class в любой директории -->
+				<exclude name="**/test*" /> <!-- кроме файлов на 'test'+* -->
+			</fileset>
+			<manifest>
+				<attribute name="Main-Class" value="mypack.Main" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="run_after_compile">
+		<echo>run class...</echo>
+		<echo>${dest.path}</echo>
+		<java fork="true" failonerror="yes" classname="mypack.Main" classpath="${dest.path}" />
+	</target>
+	
+	<target name="run_after_compile2">
+		<echo>run jar file...</echo>
+		<echo>${jar.file}</echo>
+		<java jar="${jar.file}" failonerror="yes" fork="true" output="out.txt" />
+	</target>
+	
+	<target name="test_external_param">
+		<echo>${external.string}</echo>
+		<echo>${external.combined.property}</echo>
+	</target>
+	
+	
+	<target name="test_prepare">
+		<antversion property="antversionOption"  />
+		<echo>${antversionOption}</echo>
+		<echo>ant.file: ${ant.file}</echo>
+		<echo>ant.home: ${ant.home}</echo>
+		<fail message="You need ant version 1.8 or higher, or directly 1.5.0">
+			<condition>
+				<and>
+					<not>
+						<antversion atleast="1.8.0" />
+					</not>
+					<not>
+						<!-- just example -->
+						<antversion exactly="1.5.0" />
+					</not>
+				</and>				
+			</condition>
+		</fail>
+		<fail message="No src.path!">
+			<condition>
+				<not>
+					<isset property="src.path" />
+				</not>
+			</condition>
+		</fail>
+	</target>
+
+</project>
