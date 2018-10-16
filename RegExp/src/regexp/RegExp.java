@@ -48,39 +48,46 @@ public class RegExp {
 			// Get all content from page
 			String titleRegex = "<h1\\s* class=\\\"page-title\\\">(.+)<\\/h1>"; // "(<h1>)"; // 
 			
-//			String menuRegex = "<div class=\"menu\">\\s+(?:<a\\s+href=\"([^\"]+)\">([^<]+)</a>\\s+)+\\s+<div>";
-			String menuRegex = "<a\\s+href=\"([^\"]+)\">([^<]+)</a>";
-//			String menuRegex = "<a"; // \\s*[^<>]*>([^<>]+)<\\/a>
+			// get title
+			Pattern titlePattern = Pattern.compile(titleRegex, Pattern.CASE_INSENSITIVE|Pattern.MULTILINE|Pattern.DOTALL);
+			Matcher titleMatcher = titlePattern.matcher(html); // "<h1 class=\"page-title\">Page title of Lorem text.</h1>"
+			if(titleMatcher.find()){
+				//p("title group count = " + titleMatcher.groupCount());
+				String title = titleMatcher.group(1);
+				pf("Title: %s \n\n", title);
+			}
+			
+			// get menu, using matcher
+
+			// find menu block
+			Matcher menuBlockMatcher = Pattern.compile("<div class=\\\"menu\\\">.+</div>", 
+				Pattern.CASE_INSENSITIVE|Pattern.DOTALL|Pattern.MULTILINE)
+				.matcher(html);
+			if(menuBlockMatcher.find()){
+				String menuBlock = menuBlockMatcher.group();
+				
+				// find menu items in menu block
+				String menuRegex = "(?<!#)<a\\s+href=\"([^\"]+)\">([^<]+)</a>";
+				Pattern menuPattern = Pattern.compile(menuRegex, Pattern.CASE_INSENSITIVE|Pattern.MULTILINE|Pattern.DOTALL);
+				Matcher menuMatcher = menuPattern.matcher(html );
+				p("menu:");
+				while(menuMatcher.find()){
+					int menuGroupCount = menuMatcher.groupCount();
+					pf("menu count = %d \n", menuGroupCount);
+					String link = menuMatcher.group(1);
+					String text = menuMatcher.group(2);
+					pf("page: [%s] | text: '%s'\n", link, text);
+				}
+			}
+			p("");
+			
+			// get content parts, using MatchResult
 			
 			String contentRegex = "<div class=\"part\" id=\"(part-\\d+)\">\\s+"
 				+ "<div class=\"part-title\">([^<]+)</div>\\s+"
 				+ "<div class=\"part-content\">([^<]+)</div>\\s+"
 				+ "</div>";
 			
-			// get title
-			Pattern titlePattern = Pattern.compile(titleRegex, Pattern.CASE_INSENSITIVE|Pattern.MULTILINE|Pattern.DOTALL);
-			Matcher titleMatcher = titlePattern.matcher(html); // "<h1 class=\"page-title\">Page title of Lorem text.</h1>"
-			//p(titleMatcher.find());
-			//p("title group count = " + titleMatcher.groupCount());
-			if(titleMatcher.find()){
-				String title = titleMatcher.group(1);
-				pf("Title: %s \n\n", title);
-			}
-			
-			// get menu, using matcher
-			Pattern menuPattern = Pattern.compile(menuRegex, Pattern.CASE_INSENSITIVE|Pattern.MULTILINE|Pattern.DOTALL);
-			Matcher menuMatcher = menuPattern.matcher(html );
-			p("menu:");
-			while(menuMatcher.find()){
-				int menuGroupCount = menuMatcher.groupCount();
-//				pf("menu count = %d \n", menuGroupCount);
-				String link = menuMatcher.group(1);
-				String text = menuMatcher.group(2);
-				pf("page: [%s] | text: '%s'\n", link, text);
-			}
-			p("");
-			
-			// get content parts, using MatchResult
 			Pattern contentPattern = Pattern.compile(contentRegex, Pattern.CASE_INSENSITIVE|Pattern.DOTALL|Pattern.MULTILINE);
 			Matcher contentMatcher = contentPattern.matcher(html);
 			List<MatchResult> matchResList = new ArrayList<>();
