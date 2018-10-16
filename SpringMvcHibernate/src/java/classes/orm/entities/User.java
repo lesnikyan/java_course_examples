@@ -7,12 +7,15 @@ package classes.orm.entities;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -26,6 +29,7 @@ public class User  implements java.io.Serializable {
 	private String login;
 	private String password;
 	private String email;
+	private Set<Phone> phones = new HashSet<>();
 
     public User() {
     }
@@ -76,6 +80,18 @@ public class User  implements java.io.Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+	public Set<Phone> getPhones() {
+		return phones;
+	}
+
+	/**
+	 * @param phones the phones to set
+	 */
+	public void setPhones(Set<Phone> phones) {
+		this.phones = phones;
+	}
 
 
 }

@@ -1,6 +1,7 @@
 
 package classes.dao;
 
+import classes.orm.entities.Phone;
 import classes.orm.entities.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
